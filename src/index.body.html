@@ -1,0 +1,357 @@
+<title>Geet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Geet is an iPhone app where squads of 2 to 4 friends compete to stay locked in. Join the waitlist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one screen of pitch (headline + form left, the app itself on a phone right), then two short rows and a footer. Single dark look by design. */
+:root {
+  color-scheme: dark;
+  --bg: #0e0c14;
+  --panel: #18151f;
+  --line: #2a2533;
+  --fg: #f3f0f7;
+  --muted: #9d95ad;
+  --neon: #ff3d7f;
+  --cyan: #3ee6ff;
+  --skin: #a8673f;
+  --skin-dark: #8a5131;
+  --hair: #1b1420;
+  --font-display: "Bungee", "Arial Black", Impact, sans-serif;
+  --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+a { color: var(--fg); }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+nav { padding-block: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.logo { font-family: var(--font-display); font-size: 22px; letter-spacing: .02em; }
+.badge { font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
+.badge b { color: var(--fg); font-weight: 600; }
+
+.hero { display: grid; grid-template-columns: 1fr 320px; gap: 56px; align-items: center; padding-block: 32px 72px; }
+.hero > * { min-width: 0; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 6vw, 68px); line-height: 1; margin: 0 0 18px; text-wrap: balance; }
+h1 span { color: var(--neon); }
+.sub { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 34ch; }
+.sub b { color: var(--fg); font-weight: 600; }
+
+form { display: grid; grid-template-columns: 1.6fr 1fr 1fr auto; gap: 8px; max-width: 640px; }
+input, select { font: inherit; font-size: 16px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; width: 100%; min-width: 0; }
+input::placeholder { color: #6c6479; }
+button { font: inherit; cursor: pointer; }
+.btn { font-weight: 800; font-size: 16px; background: var(--neon); color: #1a0710; border: 0; border-radius: 10px; padding: 12px 18px; white-space: nowrap; }
+.btn:hover { filter: brightness(1.08); }
+.btn.quiet { background: transparent; color: var(--fg); border: 1px solid var(--line); font-weight: 600; }
+.formnote { font-size: 13px; color: var(--muted); margin: 12px 0 0; display: flex; gap: 6px 18px; flex-wrap: wrap; }
+.formnote b { color: var(--cyan); font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+.err { color: #ffb4c9; font-size: 14px; margin-top: 10px; min-height: 0; }
+
+.result { max-width: 560px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; grid-template-columns: 72px 1fr; gap: 16px; align-items: start; }
+.result svg { width: 72px; }
+.result p { margin: 0 0 6px; }
+.result .roast { font-weight: 800; font-size: 18px; line-height: 1.3; }
+.result .small { color: var(--muted); font-size: 14px; }
+.result .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+/* phone */
+.phone { width: 300px; max-width: 100%; margin: 0 auto; border: 10px solid #23202b; border-radius: 42px; background: #0a0910; padding: 18px 16px 22px; box-shadow: 0 30px 80px -40px rgba(255, 61, 127, .5); }
+.notch { width: 90px; height: 22px; background: #23202b; border-radius: 0 0 14px 14px; margin: -18px auto 14px; }
+.ph-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+.ph-top b { font-family: var(--font-display); font-weight: 400; font-size: 18px; }
+.ph-top span { font-size: 12px; color: var(--muted); }
+.ph-card { background: var(--panel); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+.ph-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+.alert { border: 1px solid var(--neon); }
+.alert .big { font-family: var(--font-mono); font-size: 26px; color: var(--neon); font-variant-numeric: tabular-nums; }
+.alert .t { font-size: 13px; color: var(--muted); }
+.rank { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; font-variant-numeric: tabular-nums; }
+.rank span:last-child { font-family: var(--font-mono); color: var(--cyan); }
+.rank.me span { color: var(--neon); font-weight: 600; }
+.timer { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; }
+.timer b { font-family: var(--font-mono); font-weight: 500; color: var(--cyan); }
+
+/* rows */
+.row { border-top: 1px solid var(--line); }
+.row .wrap { padding-block: 48px; }
+h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(24px, 3vw, 32px); margin: 0 0 24px; line-height: 1.1; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; list-style: none; padding: 0; margin: 0; }
+.steps li { min-width: 0; }
+.steps b { display: block; font-size: 18px; margin-bottom: 4px; }
+.steps span { color: var(--muted); }
+
+.roaster { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: center; }
+.roaster svg { width: 96px; }
+.roaster > div { min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.chip { font-size: 14px; font-weight: 600; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; }
+.chip[aria-pressed="true"] { border-color: var(--neon); color: var(--neon); }
+.line { font-size: 20px; font-weight: 800; margin: 0; min-height: 1.4em; }
+
+footer .wrap { border-top: 1px solid var(--line); padding-block: 28px 36px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+footer a { color: var(--muted); }
+footer a:hover { color: var(--fg); }
+.links { display: flex; gap: 16px; flex-wrap: wrap; }
+
+@media (max-width: 880px) {
+  .hero { grid-template-columns: 1fr; gap: 40px; }
+  form { grid-template-columns: 1fr 1fr; }
+  form input[type=email] { grid-column: 1 / -1; }
+  form .btn { grid-column: 1 / -1; }
+  .steps { grid-template-columns: 1fr; gap: 16px; }
+}
+@media (max-width: 420px) {
+  .roaster { grid-template-columns: 1fr; }
+  .roaster svg { width: 72px; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="geet" viewBox="0 0 200 250">
+      <path d="M58 200 h84 l6 46 h-38 l-10-30 l-10 30 h-38z" fill="#2a2533"/>
+      <path d="M52 104 q48-16 96 0 q10 50-6 98 h-84 q-16-48-6-98z" fill="var(--skin)"/>
+      <path d="M66 120 q16-8 32 2 M134 120 q-16-8-32 2" stroke="var(--skin-dark)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g fill="var(--skin-dark)" opacity=".85">
+        <rect x="84" y="138" width="14" height="11" rx="5"/><rect x="102" y="138" width="14" height="11" rx="5"/>
+        <rect x="84" y="154" width="14" height="11" rx="5"/><rect x="102" y="154" width="14" height="11" rx="5"/>
+        <rect x="85" y="170" width="13" height="11" rx="5"/><rect x="102" y="170" width="13" height="11" rx="5"/>
+      </g>
+      <path d="M52 108 q-26 4-34-22 q-4-14 6-24" stroke="var(--skin)" stroke-width="22" fill="none" stroke-linecap="round"/>
+      <path d="M148 108 q26 4 34-22 q4-14-6-24" stroke="var(--skin)" stroke-width="22" fill="none" stroke-linecap="round"/>
+      <circle cx="30" cy="84" r="13" fill="var(--skin)"/><circle cx="170" cy="84" r="13" fill="var(--skin)"/>
+      <circle cx="24" cy="58" r="11" fill="var(--skin)"/><circle cx="176" cy="58" r="11" fill="var(--skin)"/>
+      <rect x="88" y="84" width="24" height="22" rx="6" fill="var(--skin-dark)"/>
+      <ellipse cx="100" cy="58" rx="30" ry="34" fill="var(--skin)"/>
+      <path d="M70 52 q2-34 32-34 q30 0 30 32 q-8-12-20-14 q-10 8-26 6 q-10 2-16 10z" fill="var(--hair)"/>
+      <path d="M70 46 q30-10 60 0 v8 q-30-10-60 0z" fill="var(--neon)"/>
+      <path d="M84 62 q6-4 12 0 M106 62 q6-4 12 0" stroke="var(--hair)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M82 54 l14 2 M104 56 l14-3" stroke="var(--hair)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M88 76 q12-6 24 0 q-12 2-24 0z" fill="var(--hair)"/>
+      <path d="M92 84 q10 6 20-2" stroke="var(--hair)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="70" cy="62" rx="5" ry="8" fill="var(--skin-dark)"/><ellipse cx="130" cy="62" rx="5" ry="8" fill="var(--skin-dark)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<nav class="wrap">
+  <div class="logo">GEET</div>
+  <div class="badge">iPhone app · <b>early access Nov 5</b></div>
+</nav>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <h1>Your friends are about to find out <span>you're lazy.</span></h1>
+      <p class="sub"><b>Geet is an iPhone app</b> where you and 1–3 friends compete to stay locked in.</p>
+
+      <form id="joinForm" novalidate>
+        <input id="email" type="email" autocomplete="email" placeholder="Email" aria-label="Email" required>
+        <select id="age" aria-label="Age" required>
+          <option value="">Age</option>
+          <option value="under13">Under 13</option>
+          <option value="13-15">13–15</option>
+          <option value="16-17">16–17</option>
+          <option value="18-20">18–20</option>
+          <option value="21-24">21–24</option>
+          <option value="25+">25+</option>
+        </select>
+        <select id="country" aria-label="Country" required>
+          <option value="">Country</option>
+          <option value="US">United States</option>
+          <option value="IN">India</option>
+          <option value="CA">Canada</option>
+          <option value="UK">United Kingdom</option>
+          <option value="other">Other</option>
+        </select>
+        <button class="btn" type="submit" id="submitBtn">Join waitlist</button>
+      </form>
+      <div class="err" id="err" role="alert"></div>
+      <p class="formnote" id="formNote">
+        <span>First month free for early signups</span>
+        <span>Launch in <b id="countdown">--</b></span>
+        <span id="joined" hidden></span>
+      </p>
+
+      <div class="result" id="done" hidden>
+        <svg viewBox="0 0 200 250" role="img" aria-label="Geet"><use href="#geet"/></svg>
+        <div>
+          <p class="roast" id="doneRoast"></p>
+          <p class="small" id="doneStatus"></p>
+          <div class="actions">
+            <button class="btn" type="button" id="copyBtn">Copy invite for your squad</button>
+          </div>
+          <textarea id="shareText" rows="3" readonly hidden style="width:100%;margin-top:8px;font:13px var(--font-mono);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px"></textarea>
+        </div>
+      </div>
+
+      <div class="result" id="young" hidden>
+        <svg viewBox="0 0 200 250" role="img" aria-label="Geet"><use href="#geet"/></svg>
+        <div>
+          <p class="roast">Come back when you're 13. Until then, do your homework.</p>
+          <p class="small">Nothing was saved.</p>
+          <div class="actions"><button class="btn quiet" type="button" id="backBtn">Back</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phone" aria-label="Preview of the Geet app" role="img">
+      <div class="notch"></div>
+      <div class="ph-top"><b>Squad</b><span>Season 1 · Day 18</span></div>
+      <div class="ph-card alert">
+        <div class="lbl">Lock check</div>
+        <div class="big">01:42</div>
+        <div class="t">Prove you're working. Your squad is waiting.</div>
+      </div>
+      <div class="ph-card">
+        <div class="lbl">This week</div>
+        <div class="rank"><span>Rohan</span><span>212</span></div>
+        <div class="rank me"><span>You</span><span>198</span></div>
+        <div class="rank"><span>Kabir</span><span>176</span></div>
+        <div class="rank"><span>Dev</span><span>131</span></div>
+      </div>
+      <div class="ph-card timer"><span>Study block · phone locked</span><b>47:12</b></div>
+    </div>
+  </div>
+
+  <section class="row" aria-labelledby="how">
+    <div class="wrap">
+      <h2 id="how">How it works</h2>
+      <ul class="steps">
+        <li><b>Lock your phone</b><span>Start a study or skill block. Apps stay locked until it's done.</span></li>
+        <li><b>Survive lock checks</b><span>Random 2-minute checks. Miss one and your squad sees it.</span></li>
+        <li><b>Win the season</b><span>Points come from effort, not abs. Anyone can take the title.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="row" aria-labelledby="roastHead">
+    <div class="wrap roaster">
+      <svg viewBox="0 0 200 250" role="img" aria-label="Geet, the app's mascot"><use href="#geet"/></svg>
+      <div>
+        <h2 id="roastHead">Give Geet your excuse.</h2>
+        <div class="chips" id="chips"></div>
+        <p class="line" id="roastLine" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Geet · For ages 13+</span>
+    <div class="links">
+      <a href="privacy.html">Privacy</a>
+      <a href="https://www.instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.youtube.com/@yourhandle" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  // ---- settings: fill these in before launch ----
+  var SHARE_URL = "";          // public link to this page
+  var FORM_ENDPOINT = "";      // e.g. a Formspree URL; leave empty to disable outside Claude
+  var LAUNCH = Date.parse("2026-11-05T00:00:00-08:00");
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function tick() {
+    var s = Math.max(0, Math.floor((LAUNCH - Date.now()) / 1000));
+    var d = Math.floor(s / 86400), h = Math.floor(s / 3600) % 24, m = Math.floor(s / 60) % 60;
+    $("countdown").textContent = s === 0 ? "now" : d + "d " + h + "h " + m + "m";
+  }
+  tick(); setInterval(tick, 30000);
+
+  var roasts = {
+    "I'll start Monday": "You've announced 37 Mondays this year.",
+    "I'm too tired": "Scrolling is not cardio.",
+    "No one will do it with me": "Then beat them. Nobody wants to lose to you.",
+    "Just one more episode": "That's what you said four episodes ago.",
+    "I don't have time": "You had time to read this whole page."
+  };
+  var keys = Object.keys(roasts);
+  var chips = $("chips");
+  keys.forEach(function (k, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = k;
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", function () {
+      Array.prototype.forEach.call(chips.children, function (c) { c.setAttribute("aria-pressed", "false"); });
+      b.setAttribute("aria-pressed", "true");
+      $("roastLine").textContent = roasts[k];
+    });
+    chips.appendChild(b);
+  });
+  $("roastLine").textContent = roasts[keys[0]];
+
+  var doneRoasts = [
+    "Signing up is the easy part. I'll be watching on day 3.",
+    "You're in. Your excuses are officially on notice.",
+    "Nice. Now put the phone down and do ten push-ups."
+  ];
+
+  // storage: Claude artifact db when available, otherwise FORM_ENDPOINT
+  var db = null, uid = null;
+  if (window.claude && typeof window.claude.use === "function") {
+    Promise.all([window.claude.use("db"), window.claude.use("user")]).then(function (r) {
+      db = r[0]; var user = r[1];
+      if (!db) return;
+      db.collection("joined").limit(1000).onSnapshot(function (snap) {
+        if (snap.size >= 25) { $("joined").hidden = false; $("joined").textContent = (snap.size >= 1000 ? "1,000+" : snap.size) + " on the list"; }
+      }, function () {});
+      if (user && user.id) user.id().then(function (id) { uid = id || null; });
+    }).catch(function () {});
+  }
+
+  function save(rec) {
+    if (db && uid) {
+      return db.doc("signups/" + uid).set(rec)
+        .then(function () { return db.doc("joined/" + uid).set({ country: rec.country, joinedAt: rec.joinedAt }); })
+        .then(function () { return true; });
+    }
+    if (FORM_ENDPOINT) {
+      return fetch(FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(rec) })
+        .then(function (r) { return r.ok; });
+    }
+    return Promise.resolve(false);
+  }
+
+  $("joinForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = $("email").value.trim(), age = $("age").value, country = $("country").value, err = "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) err = "Check your email for a typo.";
+    else if (!age) err = "Pick your age.";
+    else if (!country) err = "Pick your country.";
+    $("err").textContent = err;
+    if (err) return;
+    $("joinForm").hidden = true; $("formNote").hidden = true;
+    if (age === "under13") { $("young").hidden = false; return; }
+    var btn = $("submitBtn"); btn.disabled = true;
+    save({ email: email, age: age, country: country, joinedAt: new Date().toISOString() })
+      .catch(function () { return false; })
+      .then(function (ok) {
+        $("doneRoast").textContent = doneRoasts[Math.floor(Math.random() * doneRoasts.length)];
+        $("doneStatus").textContent = ok ? "You're on the list. We'll email you on Nov 5." : "We couldn't save your spot. Try again later or follow us for the launch link.";
+        $("shareText").value = "Join my squad on Geet, an app where friends compete to stay locked in: " + (SHARE_URL || "[link coming soon]");
+        $("done").hidden = false;
+      });
+  });
+  $("backBtn").addEventListener("click", function () {
+    $("young").hidden = true; $("joinForm").hidden = false; $("formNote").hidden = false; $("age").value = "";
+  });
+  $("copyBtn").addEventListener("click", function () {
+    var t = $("shareText"), b = $("copyBtn");
+    function fallback() { t.hidden = false; t.focus(); t.select(); b.textContent = "Copy the text below"; }
+    try { navigator.clipboard.writeText(t.value).then(function () { b.textContent = "Copied"; }, fallback); }
+    catch (x) { fallback(); }
+  });
+})();
+</script>
