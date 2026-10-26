@@ -19,6 +19,7 @@
   --muted: #9d95ad;
   --neon: #ff3d7f;
   --cyan: #3ee6ff;
+  --neon-ink: #c2185b;
   --skin: #a8673f;
   --skin-dark: #8a5131;
   --hair: #1b1420;
@@ -56,10 +57,10 @@ button { font: inherit; cursor: pointer; }
 .formnote b { color: var(--cyan); font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
 .err { color: #ffb4c9; font-size: 14px; margin-top: 10px; min-height: 0; }
 
-.result { max-width: 560px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; grid-template-columns: 72px 1fr; gap: 16px; align-items: start; }
-.result svg { width: 72px; }
+.result { max-width: 600px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; grid-template-columns: 120px 1fr; gap: 18px; align-items: center; }
+.result svg { width: 120px; }
 .result p { margin: 0 0 6px; }
-.result .roast { font-weight: 800; font-size: 18px; line-height: 1.3; }
+.result .roast { font-weight: 800; font-size: 19px; line-height: 1.3; background: var(--fg); color: var(--bg); border-radius: 16px; border-bottom-left-radius: 6px; padding: 10px 14px; }
 .result .small { color: var(--muted); font-size: 14px; }
 .result .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 
@@ -89,13 +90,23 @@ h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(24px, 
 .steps b { display: block; font-size: 18px; margin-bottom: 4px; }
 .steps span { color: var(--muted); }
 
-.roaster { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: center; }
-.roaster svg { width: 96px; }
-.roaster > div { min-width: 0; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.chip { font-size: 14px; font-weight: 600; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; }
+.geet-band { background: var(--panel); }
+.roaster { display: grid; grid-template-columns: 340px 1fr; gap: 48px; align-items: end; }
+.geet-big { display: block; width: 100%; max-width: 340px; }
+.chat { min-width: 0; display: grid; gap: 14px; justify-items: start; padding-bottom: 20px; }
+.chat h2 { margin: 0; }
+.hint { margin: 0 0 4px; color: var(--muted); font-size: 17px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.msg { max-width: 540px; border-radius: 20px; padding: 12px 18px 14px; display: grid; gap: 2px; position: relative; }
+.msg .who { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.msg.you { justify-self: end; background: var(--bg); border: 1px solid var(--line); border-bottom-right-radius: 6px; font-size: 17px; }
+.msg.you .who { color: var(--muted); }
+.msg.geet { background: var(--fg); color: var(--bg); border-bottom-left-radius: 6px; }
+.msg.geet .who { color: var(--neon-ink); }
+.msg.geet::before { content: ""; position: absolute; left: -12px; bottom: 16px; border: 12px solid transparent; border-right-color: var(--fg); border-left: 0; }
+#roastLine { font-size: clamp(21px, 2.6vw, 28px); font-weight: 800; line-height: 1.25; }
+.chip { font-size: 15px; font-weight: 600; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; }
 .chip[aria-pressed="true"] { border-color: var(--neon); color: var(--neon); }
-.line { font-size: 20px; font-weight: 800; margin: 0; min-height: 1.4em; }
 
 footer .wrap { border-top: 1px solid var(--line); padding-block: 28px 36px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
 footer a { color: var(--muted); }
@@ -109,9 +120,14 @@ footer a:hover { color: var(--fg); }
   form .btn { grid-column: 1 / -1; }
   .steps { grid-template-columns: 1fr; gap: 16px; }
 }
-@media (max-width: 420px) {
-  .roaster { grid-template-columns: 1fr; }
-  .roaster svg { width: 72px; }
+@media (max-width: 760px) {
+  .roaster { grid-template-columns: 1fr; gap: 8px; }
+  .geet-big { max-width: 220px; justify-self: center; }
+  .msg.geet::before { display: none; }
+}
+@media (max-width: 460px) {
+  .result { grid-template-columns: 1fr; }
+  .result svg { width: 96px; }
 }
 </style>
 
@@ -120,28 +136,126 @@ footer a:hover { color: var(--fg); }
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="geet" viewBox="0 0 200 250">
-      <path d="M58 200 h84 l6 46 h-38 l-10-30 l-10 30 h-38z" fill="#2a2533"/>
-      <path d="M52 104 q48-16 96 0 q10 50-6 98 h-84 q-16-48-6-98z" fill="var(--skin)"/>
-      <path d="M66 120 q16-8 32 2 M134 120 q-16-8-32 2" stroke="var(--skin-dark)" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <g fill="var(--skin-dark)" opacity=".85">
-        <rect x="84" y="138" width="14" height="11" rx="5"/><rect x="102" y="138" width="14" height="11" rx="5"/>
-        <rect x="84" y="154" width="14" height="11" rx="5"/><rect x="102" y="154" width="14" height="11" rx="5"/>
-        <rect x="85" y="170" width="13" height="11" rx="5"/><rect x="102" y="170" width="13" height="11" rx="5"/>
-      </g>
-      <path d="M52 108 q-26 4-34-22 q-4-14 6-24" stroke="var(--skin)" stroke-width="22" fill="none" stroke-linecap="round"/>
-      <path d="M148 108 q26 4 34-22 q4-14-6-24" stroke="var(--skin)" stroke-width="22" fill="none" stroke-linecap="round"/>
-      <circle cx="30" cy="84" r="13" fill="var(--skin)"/><circle cx="170" cy="84" r="13" fill="var(--skin)"/>
-      <circle cx="24" cy="58" r="11" fill="var(--skin)"/><circle cx="176" cy="58" r="11" fill="var(--skin)"/>
-      <rect x="88" y="84" width="24" height="22" rx="6" fill="var(--skin-dark)"/>
-      <ellipse cx="100" cy="58" rx="30" ry="34" fill="var(--skin)"/>
-      <path d="M70 52 q2-34 32-34 q30 0 30 32 q-8-12-20-14 q-10 8-26 6 q-10 2-16 10z" fill="var(--hair)"/>
-      <path d="M70 46 q30-10 60 0 v8 q-30-10-60 0z" fill="var(--neon)"/>
-      <path d="M84 62 q6-4 12 0 M106 62 q6-4 12 0" stroke="var(--hair)" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M82 54 l14 2 M104 56 l14-3" stroke="var(--hair)" stroke-width="3" stroke-linecap="round"/>
-      <path d="M88 76 q12-6 24 0 q-12 2-24 0z" fill="var(--hair)"/>
-      <path d="M92 84 q10 6 20-2" stroke="var(--hair)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="70" cy="62" rx="5" ry="8" fill="var(--skin-dark)"/><ellipse cx="130" cy="62" rx="5" ry="8" fill="var(--skin-dark)"/>
+    <linearGradient id="gSkinTorso" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7a4023"/>
+      <stop offset=".22" stop-color="#a5603a"/>
+      <stop offset=".5" stop-color="#c07a4c"/>
+      <stop offset=".78" stop-color="#a5603a"/>
+      <stop offset="1" stop-color="#7a4023"/>
+    </linearGradient>
+    <linearGradient id="gSkinArm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c88452"/>
+      <stop offset=".55" stop-color="#a5603a"/>
+      <stop offset="1" stop-color="#7a4023"/>
+    </linearGradient>
+    <linearGradient id="gFore" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7f4426"/>
+      <stop offset=".5" stop-color="#b16b40"/>
+      <stop offset="1" stop-color="#8a4c2b"/>
+    </linearGradient>
+    <radialGradient id="gFace" cx=".45" cy=".4" r=".7">
+      <stop offset="0" stop-color="#c47d4d"/>
+      <stop offset="1" stop-color="#93532f"/>
+    </radialGradient>
+    <g id="gArm">
+      <!-- forearm, raised -->
+      <path d="M26 210 C14 170 20 126 38 100 L92 104 C90 136 88 172 86 210 Z" fill="url(#gFore)"/>
+      <path d="M48 112 C44 140 44 172 50 200" stroke="#6e3a1e" stroke-width="3" fill="none" opacity=".45" stroke-linecap="round"/>
+      <!-- wristband -->
+      <path d="M40 98 L90 102 L88 120 L37 116 Z" fill="#ff3d7f"/>
+      <path d="M40 104 L89 108" stroke="#c42a5e" stroke-width="2"/>
+      <!-- fist -->
+      <path d="M34 98 C28 74 38 56 62 54 C86 52 98 68 94 92 C92 102 84 104 64 102 C46 102 36 104 34 98 Z" fill="#a5603a"/>
+      <path d="M44 66 C52 62 70 60 84 66" stroke="#6e3a1e" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+      <path d="M56 62 L56 74 M70 60 L70 72" stroke="#6e3a1e" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+      <path d="M42 84 C54 80 72 80 88 86" stroke="#6e3a1e" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".45"/>
+      <!-- upper arm with peaked bicep -->
+      <path d="M126 196 C114 158 86 140 62 150 C40 160 30 186 34 212 C38 238 66 248 98 244 C116 242 128 232 132 220 Z" fill="url(#gSkinArm)"/>
+      <ellipse cx="74" cy="168" rx="24" ry="13" fill="#e0a070" opacity=".45" transform="rotate(-18 74 168)"/>
+      <path d="M44 226 C64 238 96 238 120 228" stroke="#5e2f17" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round"/>
+      <path d="M88 150 C92 170 92 196 86 214" stroke="#6e3a1e" stroke-width="2.5" fill="none" opacity=".35" stroke-linecap="round"/>
+      <!-- deltoid cap -->
+      <path d="M156 186 C146 166 118 162 104 178 C92 192 96 220 112 232 C128 240 146 226 156 212 Z" fill="#a5603a"/>
+      <path d="M110 182 C118 174 132 172 144 178" stroke="#e0a070" stroke-width="5" fill="none" opacity=".45" stroke-linecap="round"/>
+      <path d="M112 230 C124 222 134 208 136 194" stroke="#5e2f17" stroke-width="2.5" fill="none" opacity=".45" stroke-linecap="round"/>
+    </g>
+      <symbol id="geet" viewBox="0 0 400 480">
+
+  <!-- torso -->
+  <path d="M120 198 C116 236 124 270 138 300 C148 340 150 390 150 440 L250 440 C250 390 252 340 262 300 C276 270 284 236 280 198 C262 178 244 170 224 168 L176 168 C156 170 138 178 120 198 Z" fill="url(#gSkinTorso)"/>
+  <!-- traps -->
+  <path d="M176 168 C160 172 142 180 128 194 C150 186 166 182 182 182 Z" fill="#8f502c"/>
+  <path d="M224 168 C240 172 258 180 272 194 C250 186 234 182 218 182 Z" fill="#8f502c"/>
+
+  <!-- arms -->
+  <use href="#gArm"/>
+  <use href="#gArm" transform="translate(400 0) scale(-1 1)"/>
+
+  <!-- pecs -->
+  <path d="M199 212 C186 202 156 200 138 210 C130 232 140 260 164 266 C182 270 196 260 199 250 Z" fill="#b56f43"/>
+  <path d="M201 212 C214 202 244 200 262 210 C270 232 260 260 236 266 C218 270 204 260 201 250 Z" fill="#b56f43"/>
+  <path d="M140 258 C154 272 182 274 198 256" stroke="#5e2f17" stroke-width="3.5" fill="none" opacity=".55" stroke-linecap="round"/>
+  <path d="M260 258 C246 272 218 274 202 256" stroke="#5e2f17" stroke-width="3.5" fill="none" opacity=".55" stroke-linecap="round"/>
+  <path d="M150 216 C162 210 180 210 192 216" stroke="#e3a676" stroke-width="5" fill="none" opacity=".4" stroke-linecap="round"/>
+  <path d="M208 216 C220 210 238 210 250 216" stroke="#e3a676" stroke-width="5" fill="none" opacity=".4" stroke-linecap="round"/>
+
+  <!-- abs -->
+  <g fill="#c07a4c" stroke="#6e3a1e" stroke-width="2" stroke-opacity=".55">
+    <rect x="171" y="276" width="26" height="30" rx="11"/>
+    <rect x="203" y="276" width="26" height="30" rx="11"/>
+    <rect x="172" y="312" width="25" height="30" rx="11"/>
+    <rect x="203" y="312" width="25" height="30" rx="11"/>
+    <rect x="174" y="348" width="23" height="32" rx="11"/>
+    <rect x="203" y="348" width="23" height="32" rx="11"/>
+  </g>
+  <g fill="#e3a676" opacity=".35">
+    <ellipse cx="182" cy="285" rx="7" ry="4"/><ellipse cx="214" cy="285" rx="7" ry="4"/>
+    <ellipse cx="183" cy="321" rx="7" ry="4"/><ellipse cx="214" cy="321" rx="7" ry="4"/>
+  </g>
+  <!-- obliques and serratus -->
+  <path d="M150 280 L164 274 M148 296 L164 290 M150 312 L164 306" stroke="#5e2f17" stroke-width="3" stroke-linecap="round" opacity=".45"/>
+  <path d="M250 280 L236 274 M252 296 L236 290 M250 312 L236 306" stroke="#5e2f17" stroke-width="3" stroke-linecap="round" opacity=".45"/>
+  <path d="M164 384 C172 404 182 420 190 440" stroke="#5e2f17" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round"/>
+  <path d="M236 384 C228 404 218 420 210 440" stroke="#5e2f17" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round"/>
+
+  <!-- shorts -->
+  <path d="M144 436 L256 436 L262 480 L138 480 Z" fill="#1e1a27"/>
+  <rect x="144" y="434" width="112" height="12" fill="#2b2536"/>
+  <rect x="144" y="446" width="112" height="4" fill="#ff3d7f"/>
+  <path d="M196 450 L192 470 M204 450 L208 470" stroke="#f3f0f7" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- neck -->
+  <path d="M176 140 L224 140 L230 184 C214 192 186 192 170 184 Z" fill="#8f502c"/>
+  <path d="M182 150 L190 182 M218 150 L210 182" stroke="#5e2f17" stroke-width="2.5" opacity=".4" stroke-linecap="round"/>
+
+  <!-- head -->
+  <ellipse cx="153" cy="106" rx="9" ry="14" fill="#93532f"/>
+  <ellipse cx="247" cy="106" rx="9" ry="14" fill="#93532f"/>
+  <path d="M156 96 C156 58 176 44 200 44 C224 44 244 58 244 96 C244 128 236 150 216 160 C208 164 192 164 184 160 C164 150 156 128 156 96 Z" fill="url(#gFace)"/>
+  <!-- stubble -->
+  <path d="M160 116 C162 140 176 158 200 162 C224 158 238 140 240 116 C236 136 226 148 214 152 C206 155 194 155 186 152 C174 148 164 136 160 116 Z" fill="#2a1a14" opacity=".55"/>
+  <!-- hair: short fade with volume on top -->
+  <path d="M154 96 C150 58 170 30 204 30 C236 30 252 52 248 94 C246 82 242 74 236 70 C224 62 204 60 184 64 C170 68 160 78 154 96 Z" fill="#18121c"/>
+  <path d="M176 40 C188 32 210 30 226 38" stroke="#3a2c40" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- headband -->
+  <path d="M155 82 C180 70 220 70 245 82 L245 94 C220 82 180 82 155 94 Z" fill="#ff3d7f"/>
+  <path d="M245 84 L262 76 L258 92 Z M245 90 L264 96 L250 100 Z" fill="#ff3d7f"/>
+  <!-- brows: one raised -->
+  <path d="M168 104 C176 94 186 92 196 98" stroke="#18121c" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M206 102 C214 100 224 100 232 104" stroke="#18121c" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- eyes: unimpressed -->
+  <ellipse cx="183" cy="113" rx="9" ry="5" fill="#f6efe8"/>
+  <ellipse cx="218" cy="114" rx="9" ry="4.5" fill="#f6efe8"/>
+  <circle cx="185" cy="114" r="4" fill="#1a1110"/>
+  <circle cx="220" cy="115" r="4" fill="#1a1110"/>
+  <path d="M173 110 C178 107 188 107 193 110" stroke="#2a1a14" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M208 112 C213 110 223 110 228 112" stroke="#2a1a14" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- nose -->
+  <path d="M201 116 C200 124 196 130 194 134 C198 138 206 138 209 134" stroke="#6e3a1e" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- mustache and smirk -->
+  <path d="M184 143 C192 136 208 136 216 141 C206 141 194 142 184 143 Z" fill="#18121c"/>
+  <path d="M188 149 C198 153 208 151 216 144" stroke="#4a1f12" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M216 144 L219 141" stroke="#4a1f12" stroke-width="3" stroke-linecap="round"/>
     </symbol>
   </defs>
 </svg>
@@ -186,7 +300,7 @@ footer a:hover { color: var(--fg); }
       </p>
 
       <div class="result" id="done" hidden>
-        <svg viewBox="0 0 200 250" role="img" aria-label="Geet"><use href="#geet"/></svg>
+        <svg viewBox="0 0 400 480" role="img" aria-label="Geet"><use href="#geet"/></svg>
         <div>
           <p class="roast" id="doneRoast"></p>
           <p class="small" id="doneStatus"></p>
@@ -198,7 +312,7 @@ footer a:hover { color: var(--fg); }
       </div>
 
       <div class="result" id="young" hidden>
-        <svg viewBox="0 0 200 250" role="img" aria-label="Geet"><use href="#geet"/></svg>
+        <svg viewBox="0 0 400 480" role="img" aria-label="Geet"><use href="#geet"/></svg>
         <div>
           <p class="roast">Come back when you're 13. Until then, do your homework.</p>
           <p class="small">Nothing was saved.</p>
@@ -226,6 +340,20 @@ footer a:hover { color: var(--fg); }
     </div>
   </div>
 
+  <section class="row geet-band" aria-labelledby="roastHead">
+    <div class="wrap roaster">
+      <svg class="geet-big" viewBox="0 0 400 480" role="img" aria-label="Geet, the app's mascot, flexing"><use href="#geet"/></svg>
+      <div class="chat">
+        <h2 id="roastHead">Tell Geet your excuse.</h2>
+        <p class="hint">Tap one. He'll roast it.</p>
+        <div class="chips" id="chips"></div>
+        <div class="msg you"><span class="who">You</span><span id="youLine"></span></div>
+        <div class="msg geet" aria-live="polite"><span class="who">Geet</span><span id="roastLine"></span></div>
+        <button class="btn quiet" type="button" id="againBtn">Roast me again</button>
+      </div>
+    </div>
+  </section>
+
   <section class="row" aria-labelledby="how">
     <div class="wrap">
       <h2 id="how">How it works</h2>
@@ -237,16 +365,6 @@ footer a:hover { color: var(--fg); }
     </div>
   </section>
 
-  <section class="row" aria-labelledby="roastHead">
-    <div class="wrap roaster">
-      <svg viewBox="0 0 200 250" role="img" aria-label="Geet, the app's mascot"><use href="#geet"/></svg>
-      <div>
-        <h2 id="roastHead">Give Geet your excuse.</h2>
-        <div class="chips" id="chips"></div>
-        <p class="line" id="roastLine" aria-live="polite"></p>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer>
@@ -278,14 +396,38 @@ footer a:hover { color: var(--fg); }
   tick(); setInterval(tick, 30000);
 
   var roasts = {
-    "I'll start Monday": "You've announced 37 Mondays this year.",
-    "I'm too tired": "Scrolling is not cardio.",
-    "No one will do it with me": "Then beat them. Nobody wants to lose to you.",
-    "Just one more episode": "That's what you said four episodes ago.",
-    "I don't have time": "You had time to read this whole page."
+    "I'll start Monday": [
+      "You've said that every Monday this year. Start today.",
+      "Monday isn't coming to save you. Start today.",
+      "Your \u201cMonday\u201d has lasted six months, bro."
+    ],
+    "I'm too tired": [
+      "Tired from what? Scrolling isn't a workout.",
+      "You had energy for three hours of gaming last night.",
+      "Ten push-ups take 40 seconds. You'll survive."
+    ],
+    "No one will do it with me": [
+      "Then invite your friends and beat all of them.",
+      "Your friends are lazy too. That's your advantage.",
+      "Start alone. They'll join when they see you winning."
+    ],
+    "Just one more episode": [
+      "You said that four episodes ago.",
+      "The show isn't going anywhere. Your exam is.",
+      "Autoplay is not a personality."
+    ],
+    "I don't have time": [
+      "You had time to scroll for two hours today.",
+      "You had time to read this whole website.",
+      "You don't need more time. You need to lock in."
+    ]
   };
-  var keys = Object.keys(roasts);
+  var keys = Object.keys(roasts), current = keys[0], idx = 0;
   var chips = $("chips");
+  function showRoast() {
+    $("youLine").textContent = "\u201c" + current + "\u201d";
+    $("roastLine").textContent = roasts[current][idx];
+  }
   keys.forEach(function (k, i) {
     var b = document.createElement("button");
     b.type = "button"; b.className = "chip"; b.textContent = k;
@@ -293,11 +435,14 @@ footer a:hover { color: var(--fg); }
     b.addEventListener("click", function () {
       Array.prototype.forEach.call(chips.children, function (c) { c.setAttribute("aria-pressed", "false"); });
       b.setAttribute("aria-pressed", "true");
-      $("roastLine").textContent = roasts[k];
+      current = k; idx = 0; showRoast();
     });
     chips.appendChild(b);
   });
-  $("roastLine").textContent = roasts[keys[0]];
+  $("againBtn").addEventListener("click", function () {
+    idx = (idx + 1) % roasts[current].length; showRoast();
+  });
+  showRoast();
 
   var doneRoasts = [
     "Signing up is the easy part. I'll be watching on day 3.",
