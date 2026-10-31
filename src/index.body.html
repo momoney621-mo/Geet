@@ -1,132 +1,275 @@
 <title>Geet</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Geet is an iPhone app where squads of 2 to 4 friends compete to stay locked in. Join the waitlist.">
+<meta name="description" content="Geet is an iPhone app where you and 1–3 friends compete to stay locked in. Early access November 5.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Onest:wght@400;500;600&family=Mukta:wght@500;700&display=swap">
 <style>
-/* Layout: one screen of pitch (headline + form left, the app itself on a phone right), then two short rows and a footer. Single dark look by design. */
+/* Product page in the style of a modern focus app: centered hero with Geet on a lit pedestal,
+   three alternating phone rows, a shelf of six desi levels driven by a score slider,
+   then a closing roast. One dark look by design. */
 :root {
   color-scheme: dark;
-  --bg: #0e0c14;
-  --panel: #18151f;
-  --line: #2a2533;
-  --fg: #f3f0f7;
-  --muted: #9d95ad;
-  --neon: #ff3d7f;
-  --cyan: #3ee6ff;
-  --neon-ink: #c2185b;
-  --skin: #a8673f;
-  --skin-dark: #8a5131;
-  --hair: #1b1420;
-  --font-display: "Bungee", "Arial Black", Impact, sans-serif;
-  --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --bg: #08080c; --surface: #13131a; --raised: #1b1b24; --line: #262631;
+  --fg: #f4f3f8; --muted: #8f8d9e;
+  --accent: #ff3d7f; --saffron: #ffa62b; --ice: #8fd3ff;
+  --good: #35d07f; --warn: #ffb020; --bad: #ff5a5a;
+  --bubble: #f4f3f8; --bubble-ink: #111117;
+  --bezel: #1e1e27; --bezel-edge: #34343f; --screen: #0c0c11; --black: #000000;
+  --shadow: rgb(0 0 0 / .55);
+  --lvl1: #8a8798; --lvl2: #a78bfa; --lvl3: #2dd4bf; --lvl4: #60a5fa; --lvl5: #fbbf24; --lvl6: #ff3d7f;
+  --lvl: var(--lvl2);
+  --font-display: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Onest", "Helvetica Neue", Arial, sans-serif;
+  --font-hi: "Mukta", "Noto Sans Devanagari", "Kohinoor Devanagari", sans-serif;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.5; }
-.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
-a { color: var(--fg); }
-:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+main { overflow-x: clip; }
+a { color: inherit; }
+p { margin: 0; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.028em; line-height: 1.04; margin: 0; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.kicker { font-size: 13px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--k, var(--accent)); }
+.muted { color: var(--muted); }
+.hi { font-family: var(--font-hi); font-weight: 500; color: var(--muted); }
+:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
 
-nav { padding-block: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-.logo { font-family: var(--font-display); font-size: 22px; letter-spacing: .02em; }
-.badge { font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
-.badge b { color: var(--fg); font-weight: 600; }
-
-.hero { display: grid; grid-template-columns: 1fr 320px; gap: 56px; align-items: center; padding-block: 32px 72px; }
-.hero > * { min-width: 0; }
-h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 6vw, 68px); line-height: 1; margin: 0 0 18px; text-wrap: balance; }
-h1 span { color: var(--neon); }
-.sub { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 34ch; }
-.sub b { color: var(--fg); font-weight: 600; }
-
-form { display: grid; grid-template-columns: 1.6fr 1fr 1fr auto; gap: 8px; max-width: 640px; }
-input, select { font: inherit; font-size: 16px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; width: 100%; min-width: 0; }
-input::placeholder { color: #6c6479; }
-button { font: inherit; cursor: pointer; }
-.btn { font-weight: 800; font-size: 16px; background: var(--neon); color: #1a0710; border: 0; border-radius: 10px; padding: 12px 18px; white-space: nowrap; }
+.btn { appearance: none; border: 0; cursor: pointer; font: 600 15px/1 var(--font-body); padding: 14px 22px; border-radius: 999px; background: var(--accent); color: var(--bubble-ink); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform .15s, filter .15s; white-space: nowrap; }
 .btn:hover { filter: brightness(1.08); }
-.btn.quiet { background: transparent; color: var(--fg); border: 1px solid var(--line); font-weight: 600; }
-.formnote { font-size: 13px; color: var(--muted); margin: 12px 0 0; display: flex; gap: 6px 18px; flex-wrap: wrap; }
-.formnote b { color: var(--cyan); font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
-.err { color: #ffb4c9; font-size: 14px; margin-top: 10px; min-height: 0; }
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .6; cursor: default; }
+.btn.white { background: var(--fg); color: var(--bubble-ink); }
+.btn.ghost { background: var(--raised); color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); }
 
-.result { max-width: 600px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; grid-template-columns: 120px 1fr; gap: 18px; align-items: center; }
-.result svg { width: 120px; }
-.result p { margin: 0 0 6px; }
-.result .roast { font-weight: 800; font-size: 19px; line-height: 1.3; background: var(--fg); color: var(--bg); border-radius: 16px; border-bottom-left-radius: 6px; padding: 10px 14px; }
-.result .small { color: var(--muted); font-size: 14px; }
-.result .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+/* Geet head avatar */
+.av { display: block; flex: none; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 38%, color-mix(in oklab, var(--accent) 50%, var(--raised)), var(--raised) 75%); }
+.av svg { display: block; width: 100%; height: 100%; }
 
-/* phone */
-.phone { width: 300px; max-width: 100%; margin: 0 auto; border: 10px solid #23202b; border-radius: 42px; background: #0a0910; padding: 18px 16px 22px; box-shadow: 0 30px 80px -40px rgba(255, 61, 127, .5); }
-.notch { width: 90px; height: 22px; background: #23202b; border-radius: 0 0 14px 14px; margin: -18px auto 14px; }
-.ph-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
-.ph-top b { font-family: var(--font-display); font-weight: 400; font-size: 18px; }
-.ph-top span { font-size: 12px; color: var(--muted); }
-.ph-card { background: var(--panel); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
-.ph-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
-.alert { border: 1px solid var(--neon); }
-.alert .big { font-family: var(--font-mono); font-size: 26px; color: var(--neon); font-variant-numeric: tabular-nums; }
-.alert .t { font-size: 13px; color: var(--muted); }
-.rank { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; font-variant-numeric: tabular-nums; }
-.rank span:last-child { font-family: var(--font-mono); color: var(--cyan); }
-.rank.me span { color: var(--neon); font-weight: 600; }
-.timer { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; }
-.timer b { font-family: var(--font-mono); font-weight: 500; color: var(--cyan); }
+/* nav */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 23px/1 var(--font-display); letter-spacing: -.03em; }
+.logo .av { width: 34px; height: 34px; }
+.links { display: flex; gap: 28px; font-size: 15px; color: var(--muted); }
+.links a { text-decoration: none; }
+.links a:hover { color: var(--fg); }
+.nav .btn { padding: 11px 18px; font-size: 14px; }
+@media (max-width: 640px) { .links { display: none; } }
 
-/* rows */
-.row { border-top: 1px solid var(--line); }
-.row .wrap { padding-block: 48px; }
-h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(24px, 3vw, 32px); margin: 0 0 24px; line-height: 1.1; }
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; list-style: none; padding: 0; margin: 0; }
-.steps li { min-width: 0; }
-.steps b { display: block; font-size: 18px; margin-bottom: 4px; }
-.steps span { color: var(--muted); }
+/* hero */
+.hero { position: relative; text-align: center;
+  background:
+    radial-gradient(40% 36% at 50% 30%, color-mix(in oklab, var(--accent) 24%, transparent), transparent 72%),
+    radial-gradient(30% 34% at 18% 64%, color-mix(in oklab, var(--saffron) 14%, transparent), transparent 70%),
+    radial-gradient(30% 34% at 82% 60%, color-mix(in oklab, var(--ice) 12%, transparent), transparent 70%); }
+.hero-in { display: flex; flex-direction: column; align-items: center; gap: 22px; padding-block: 8px 80px; }
+.pill { display: inline-flex; align-items: center; gap: 9px; padding: 7px 14px; border-radius: 999px; background: color-mix(in oklab, var(--surface) 85%, transparent); border: 1px solid var(--line); font-size: 13px; font-weight: 500; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px color-mix(in oklab, var(--good) 22%, transparent); }
 
-.geet-band { background: var(--panel); }
-.roaster { display: grid; grid-template-columns: 340px 1fr; gap: 48px; align-items: end; }
-.geet-big { display: block; width: 100%; max-width: 340px; }
-.chat { min-width: 0; display: grid; gap: 14px; justify-items: start; padding-bottom: 20px; }
-.chat h2 { margin: 0; }
-.hint { margin: 0 0 4px; color: var(--muted); font-size: 17px; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.msg { max-width: 540px; border-radius: 20px; padding: 12px 18px 14px; display: grid; gap: 2px; position: relative; }
-.msg .who { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-.msg.you { justify-self: end; background: var(--bg); border: 1px solid var(--line); border-bottom-right-radius: 6px; font-size: 17px; }
-.msg.you .who { color: var(--muted); }
-.msg.geet { background: var(--fg); color: var(--bg); border-bottom-left-radius: 6px; }
-.msg.geet .who { color: var(--neon-ink); }
-.msg.geet::before { content: ""; position: absolute; left: -12px; bottom: 16px; border: 12px solid transparent; border-right-color: var(--fg); border-left: 0; }
-#roastLine { font-size: clamp(21px, 2.6vw, 28px); font-weight: 800; line-height: 1.25; }
-.chip { font-size: 15px; font-weight: 600; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; }
-.chip[aria-pressed="true"] { border-color: var(--neon); color: var(--neon); }
+.stage { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.bubble { position: relative; background: var(--bubble); color: var(--bubble-ink); font: 600 17px/1.3 var(--font-display); letter-spacing: -.01em; padding: 13px 18px; border-radius: 20px; text-align: left; }
+.bubble.down { max-width: 330px; text-align: center; z-index: 1; }
+.bubble.down::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 16px; height: 16px; background: var(--bubble); transform: translateX(-50%) rotate(45deg); border-radius: 3px; }
+#heroLine { min-height: 2.6em; display: grid; place-items: center; transition: opacity .25s; }
+.figure { position: relative; width: 280px; max-width: 70vw; display: grid; justify-items: center; }
+.figure .halo { position: absolute; left: 50%; top: 42%; width: 150%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, color-mix(in oklab, var(--accent) 30%, transparent) 0%, transparent 62%); }
+.figure .halo::after { content: ""; position: absolute; inset: 17%; border-radius: 50%; border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent); }
+.figure .geet { position: relative; width: 100%; height: auto; display: block; filter: drop-shadow(0 18px 28px var(--shadow)); }
+.figure .pedestal { position: relative; width: 80%; height: auto; margin-top: -12px; display: block; }
 
-footer .wrap { border-top: 1px solid var(--line); padding-block: 28px 36px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
-footer a { color: var(--muted); }
-footer a:hover { color: var(--fg); }
-.links { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero h1 { font-size: clamp(42px, 7.4vw, 82px); margin-top: 10px; }
+.lede { font-size: clamp(17px, 1.7vw, 19px); color: var(--muted); max-width: 560px; }
 
-@media (max-width: 880px) {
-  .hero { grid-template-columns: 1fr; gap: 40px; }
-  form { grid-template-columns: 1fr 1fr; }
-  form input[type=email] { grid-column: 1 / -1; }
-  form .btn { grid-column: 1 / -1; }
-  .steps { grid-template-columns: 1fr; gap: 16px; }
+.join { width: 100%; max-width: 640px; display: grid; gap: 10px; justify-items: center; scroll-margin-top: 24px; }
+form { width: 100%; display: grid; grid-template-columns: 1.7fr 1fr 1fr auto; gap: 6px; padding: 6px; background: color-mix(in oklab, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 20px; }
+input, select { min-width: 0; width: 100%; font: 500 15px/1.2 var(--font-body); color: var(--fg); background-color: var(--raised); border: 1px solid transparent; border-radius: 14px; padding: 13px 14px; }
+input::placeholder { color: var(--muted); }
+input:focus, select:focus { outline: none; border-color: var(--accent); }
+select { appearance: none; -webkit-appearance: none; padding-right: 30px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%238f8d9e' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; }
+form .btn { border-radius: 14px; }
+@media (max-width: 600px) { form { grid-template-columns: 1fr 1fr; } #email, form .btn { grid-column: 1 / -1; } }
+.err { color: var(--bad); font-size: 14px; }
+.err:empty { display: none; }
+.note { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; font-size: 14px; color: var(--muted); }
+.note b { color: var(--fg); font-weight: 600; }
+
+.result { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 16px; }
+.result .av { width: 52px; height: 52px; }
+.result > div { min-width: 0; flex: 1; display: grid; gap: 10px; justify-items: start; }
+.result .bubble { font-size: 16px; border-top-left-radius: 6px; }
+.small { font-size: 14px; color: var(--muted); }
+#shareText { width: 100%; font: 13px/1.4 var(--font-body); background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; padding: 8px; resize: none; }
+
+/* sections */
+.block { padding-block: 96px; }
+.head { display: grid; gap: 14px; justify-items: center; text-align: center; max-width: 680px; margin: 0 auto; }
+.head h2 { font-size: clamp(34px, 5vw, 56px); }
+.head p { color: var(--muted); font-size: 18px; }
+
+/* feature rows */
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding-top: 72px; }
+.row .copy { display: grid; gap: 14px; max-width: 440px; justify-self: center; }
+.row h3 { font-size: clamp(30px, 3.8vw, 42px); }
+.row p { color: var(--muted); font-size: 18px; }
+.row.flip .copy { order: 2; }
+.shot { position: relative; display: grid; place-items: center; }
+.shot::before { content: ""; position: absolute; inset: -6% 0; background: radial-gradient(closest-side, color-mix(in oklab, var(--k) 30%, transparent), transparent); pointer-events: none; }
+@media (max-width: 820px) {
+  .row { grid-template-columns: 1fr; gap: 32px; text-align: center; padding-top: 64px; }
+  .row .copy { justify-items: center; }
+  .row.flip .copy { order: 0; }
 }
-@media (max-width: 760px) {
-  .roaster { grid-template-columns: 1fr; gap: 8px; }
-  .geet-big { max-width: 220px; justify-self: center; }
-  .msg.geet::before { display: none; }
+
+/* phone mockups */
+.phone { position: relative; width: 272px; max-width: 100%; aspect-ratio: 272 / 572; background: var(--bezel); border-radius: 46px; padding: 9px; box-shadow: inset 0 0 0 1.5px var(--bezel-edge), 0 40px 80px -30px var(--shadow); }
+.screen { height: 100%; background: var(--screen); border-radius: 38px; overflow: hidden; display: flex; flex-direction: column; gap: 14px; padding: 10px 16px 18px; font-size: 13px; line-height: 1.35; text-align: left; }
+.sb { position: relative; display: flex; align-items: center; justify-content: space-between; height: 26px; padding: 0 8px; font-size: 12px; font-weight: 600; }
+.sb .isl { position: absolute; left: 50%; top: 1px; transform: translateX(-50%); width: 84px; height: 24px; border-radius: 14px; background: var(--black); }
+.sbr { display: flex; align-items: center; gap: 5px; }
+.sig { display: flex; align-items: flex-end; gap: 2px; height: 10px; }
+.sig i { width: 3px; border-radius: 1px; background: var(--fg); }
+.sig i:nth-child(1) { height: 4px; } .sig i:nth-child(2) { height: 6px; } .sig i:nth-child(3) { height: 8px; } .sig i:nth-child(4) { height: 10px; }
+.bat { width: 22px; height: 11px; border: 1.5px solid var(--fg); border-radius: 3.5px; padding: 1px; }
+.bat::before { content: ""; display: block; width: 72%; height: 100%; border-radius: 1.5px; background: var(--fg); }
+.app-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.app-top b { font: 700 17px/1 var(--font-display); letter-spacing: -.01em; }
+.tag { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 999px; background: var(--raised); color: var(--muted); }
+.mini { font-size: 11px; color: var(--muted); }
+.ring { position: relative; width: 156px; aspect-ratio: 1; max-width: 100%; margin: 4px auto 0; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); display: block; }
+.ring-in { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring-in b { font: 700 34px/1 var(--font-display); letter-spacing: -.02em; }
+.task { text-align: center; display: grid; gap: 2px; }
+.task b { font-size: 15px; }
+.tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 6px; }
+.tile { aspect-ratio: 1; max-width: 100%; border-radius: 9px; display: grid; place-items: center; color: var(--fg);
+  background: color-mix(in oklab, var(--t) 28%, var(--raised)); }
+.tile svg { width: 13px; height: 13px; opacity: .85; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.stats > div { display: grid; gap: 2px; padding: 9px 11px; border-radius: 14px; background: var(--surface); }
+.stats b { font: 700 17px/1.1 var(--font-display); }
+.end { margin-top: auto; display: grid; gap: 6px; justify-items: center; }
+.pbtn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 11px; border-radius: 14px; font-weight: 600; font-size: 13px; background: var(--raised); color: var(--fg); }
+.pbtn.hot { background: var(--accent); color: var(--bubble-ink); }
+.pbtn svg { width: 16px; height: 16px; }
+
+.notif { display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 18px; background: var(--raised); }
+.notif .av { width: 34px; height: 34px; }
+.notif b { font-size: 11px; letter-spacing: .06em; }
+.notif .mini { float: right; }
+.timer { text-align: center; display: grid; gap: 2px; padding-block: 6px 2px; }
+.timer b { font: 700 52px/1 var(--font-display); letter-spacing: -.03em; color: var(--warn); }
+.vf { position: relative; height: 92px; border-radius: 16px; background: var(--raised); display: grid; place-items: center; color: var(--muted); font-size: 12px; }
+.vf::before { content: ""; position: absolute; inset: 12px; border: 2px dashed var(--line); border-radius: 10px; }
+.sq { display: grid; gap: 8px; }
+.sq-row { display: flex; align-items: center; gap: 9px; }
+.ini { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--bubble-ink); background: var(--c); flex: none; }
+.sq-row .st { margin-left: auto; font-size: 11px; font-weight: 600; }
+.ok { color: var(--good); } .wait { color: var(--warn); } .miss { color: var(--bad); }
+
+.season { display: grid; gap: 6px; }
+.bar { height: 6px; border-radius: 999px; background: var(--raised); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 24%; background: linear-gradient(90deg, var(--saffron), var(--accent)); border-radius: inherit; }
+.board { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.board li { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 14px; background: var(--surface); }
+.board li.me { background: color-mix(in oklab, var(--accent) 16%, var(--surface)); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent); }
+.rk { width: 12px; font-weight: 700; color: var(--muted); font-size: 12px; }
+.who { display: grid; min-width: 0; }
+.who b { font-size: 13px; }
+.who em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--c); white-space: nowrap; }
+.pts { margin-left: auto; font: 700 15px/1 var(--font-display); }
+.gsays { margin-top: auto; display: flex; gap: 8px; align-items: flex-end; }
+.gsays .av { width: 30px; height: 30px; }
+.gsays p { background: var(--bubble); color: var(--bubble-ink); font-weight: 600; font-size: 12px; padding: 9px 11px; border-radius: 14px 14px 14px 4px; }
+
+/* levels */
+.levels-sec { background: radial-gradient(50% 40% at 50% 30%, color-mix(in oklab, var(--lvl) 13%, transparent), transparent 75%); transition: background .3s; }
+.meter { --c: var(--lvl); display: grid; grid-template-columns: auto 1fr; gap: 20px 36px; align-items: center; max-width: 880px; margin: 48px auto 0; background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 30px 34px; }
+.score { position: relative; width: 176px; aspect-ratio: 1; max-width: 100%; }
+.score svg { width: 100%; height: 100%; display: block; transform: rotate(-90deg); }
+.score .arc { stroke: var(--c); transition: stroke-dashoffset .35s ease, stroke .35s; }
+.score-in { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.score-in b { font: 700 56px/1 var(--font-display); letter-spacing: -.04em; }
+.score-in span { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: 4px; }
+.readout { display: grid; gap: 8px; min-width: 0; }
+.readout .kicker { color: var(--c); }
+.readout h3 { font-size: clamp(30px, 3.6vw, 42px); }
+.readout .hi { font-size: 20px; line-height: 1.2; }
+.says { display: flex; gap: 12px; align-items: flex-start; margin-top: 8px; }
+.says .av { width: 46px; height: 46px; }
+.says .bubble { font-size: 16px; border-top-left-radius: 6px; }
+.slide { grid-column: 1 / -1; display: grid; gap: 10px; }
+.slide label { font-size: 14px; color: var(--muted); }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; padding: 0; border-radius: 999px; cursor: pointer;
+  background: linear-gradient(90deg, var(--lvl1) 0 19.4%, transparent 19.4% 20.4%, var(--lvl2) 20.4% 39.4%, transparent 39.4% 40.4%, var(--lvl3) 40.4% 59.4%, transparent 59.4% 60.4%, var(--lvl4) 60.4% 79.4%, transparent 79.4% 80.4%, var(--lvl5) 80.4% 94.4%, transparent 94.4% 95.4%, var(--lvl6) 95.4%); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: var(--fg); border: 5px solid var(--c); box-shadow: 0 2px 12px var(--shadow); }
+input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--fg); border: 5px solid var(--c); box-shadow: 0 2px 12px var(--shadow); }
+.ticks { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+@media (max-width: 700px) {
+  .meter { grid-template-columns: 1fr; justify-items: center; text-align: center; padding: 26px 18px; }
+  .readout { justify-items: center; }
+  .says { text-align: left; }
+  .slide { width: 100%; }
 }
-@media (max-width: 460px) {
-  .result { grid-template-columns: 1fr; }
-  .result svg { width: 96px; }
+
+.levels { list-style: none; margin: 16px auto 0; padding: 0; max-width: 880px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.lvl { --c: var(--lvl1); width: 100%; height: 100%; appearance: none; cursor: pointer; font: inherit; color: inherit; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px 14px 20px; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: border-color .2s, background-color .2s, opacity .2s; }
+.lvl:hover { border-color: color-mix(in oklab, var(--c) 55%, var(--line)); }
+.mw { position: relative; display: grid; justify-items: center; margin-bottom: 12px; }
+.mw::before { content: ""; position: absolute; top: -26px; left: 50%; width: 124px; height: 124px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(closest-side, color-mix(in oklab, var(--c) 50%, transparent), transparent); opacity: 0; transition: opacity .25s; pointer-events: none; }
+.medal { position: relative; width: 70px; height: 70px; border-radius: 50%; display: grid; place-items: center; color: var(--bubble-ink); transition: filter .25s;
+  background: radial-gradient(circle at 34% 28%, color-mix(in oklab, var(--c) 40%, var(--fg)), var(--c) 52%, color-mix(in oklab, var(--c) 55%, var(--black)));
+  box-shadow: inset 0 -4px 8px rgb(0 0 0 / .28), inset 0 2px 3px rgb(255 255 255 / .35), 0 8px 18px -6px var(--shadow); }
+.medal svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.medal.face { overflow: hidden; }
+.medal.face svg { width: 100%; height: 100%; stroke: none; }
+.stand { width: 48px; height: 10px; margin-top: -3px; background: linear-gradient(var(--bezel-edge), var(--raised)); clip-path: polygon(16% 0, 84% 0, 100% 100%, 0 100%); }
+.lvl-n { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--c); }
+.lvl-name { font: 700 20px/1.12 var(--font-display); letter-spacing: -.015em; }
+.lvl .hi { font-size: 15px; line-height: 1.3; }
+.lvl-d { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.lvl.on { border-color: var(--c); background-color: color-mix(in oklab, var(--c) 10%, var(--surface)); }
+.lvl.on .mw::before { opacity: 1; }
+.lvl.off .medal { filter: grayscale(1) brightness(.5); }
+.lvl.off { opacity: .72; }
+@media (max-width: 700px) { .levels { grid-template-columns: 1fr 1fr; gap: 10px; } .lvl { padding: 22px 10px 16px; } .lvl-name { font-size: 17px; } .lvl-d { font-size: 13px; } }
+
+/* closing roast */
+.closer-in { display: grid; grid-template-columns: 280px 1fr; gap: 56px; align-items: center; max-width: 980px; }
+.closer .figure { width: 240px; justify-self: center; }
+.closer .copy { display: grid; gap: 18px; min-width: 0; }
+.closer h2 { font-size: clamp(34px, 5vw, 56px); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { appearance: none; font: 500 14px/1 var(--font-body); color: var(--fg); background: var(--raised); border: 1px solid var(--line); padding: 10px 14px; border-radius: 999px; cursor: pointer; }
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bubble-ink); border-color: var(--fg); }
+.chat { display: grid; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 18px; }
+.you { justify-self: end; background: var(--raised); padding: 10px 14px; border-radius: 18px 18px 6px 18px; max-width: 85%; }
+.geet-says { display: flex; gap: 10px; align-items: flex-end; }
+.geet-says .av { width: 38px; height: 38px; }
+.geet-says .bubble { font-size: 17px; border-bottom-left-radius: 6px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 820px) {
+  .closer-in { grid-template-columns: 1fr; gap: 28px; text-align: center; }
+  .closer .figure { width: 180px; }
+  .closer .copy { justify-items: center; }
+  .chips, .actions { justify-content: center; }
+  .chat { width: 100%; text-align: left; }
 }
+
+/* footer */
+.foot { display: grid; gap: 18px; padding-block: 40px 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.foot .founder { color: var(--fg); font-size: 15px; max-width: 620px; }
+.foot-row { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.foot a:hover { color: var(--fg); }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 </style>
-
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="gSkinTorso" x1="0" y1="0" x2="1" y2="0">
@@ -252,122 +395,318 @@ footer a:hover { color: var(--fg); }
     </symbol>
   </defs>
 </svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="pedSide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--bezel-edge)"/><stop offset="1" style="stop-color:var(--surface)"/></linearGradient>
+    <radialGradient id="pedTop" cx=".5" cy=".5" r=".6"><stop offset="0" style="stop-color:var(--raised)"/><stop offset="1" style="stop-color:var(--bezel)"/></radialGradient>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="pedestal" viewBox="0 0 200 44"><path d="M8 14 V30 A92 12 0 0 0 192 30 V14 Z" fill="url(#pedSide)"/><ellipse cx="100" cy="14" rx="92" ry="12" fill="url(#pedTop)"/><ellipse cx="100" cy="14" rx="92" ry="12" fill="none" stroke="#ff3d7f" stroke-opacity=".6"/></symbol>
+  </defs>
+</svg>
 
-<nav class="wrap">
-  <div class="logo">GEET</div>
-  <div class="badge">iPhone app · <b>early access Nov 5</b></div>
-</nav>
+<header class="wrap nav">
+  <a class="logo" href="#top" aria-label="Geet home">
+    <span class="av"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span>
+    Geet
+  </a>
+  <nav class="links" aria-label="Sections">
+    <a href="#how">How it works</a>
+    <a href="#levels">Levels</a>
+  </nav>
+  <a class="btn white" href="#join">Join waitlist</a>
+</header>
 
-<main>
-  <div class="wrap hero">
-    <div>
-      <h1>Your friends are about to find out <span>you're lazy.</span></h1>
-      <p class="sub"><b>Geet is an iPhone app</b> where you and 1–3 friends compete to stay locked in.</p>
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <span class="pill"><span class="dot" aria-hidden="true"></span>New iPhone app · Early access Nov 5</span>
 
-      <form id="joinForm" novalidate>
-        <input id="email" type="email" autocomplete="email" placeholder="Email" aria-label="Email" required>
-        <select id="age" aria-label="Age" required>
-          <option value="">Age</option>
-          <option value="under13">Under 13</option>
-          <option value="13-15">13–15</option>
-          <option value="16-17">16–17</option>
-          <option value="18-20">18–20</option>
-          <option value="21-24">21–24</option>
-          <option value="25+">25+</option>
-        </select>
-        <select id="country" aria-label="Country" required>
-          <option value="">Country</option>
-          <option value="US">United States</option>
-          <option value="IN">India</option>
-          <option value="CA">Canada</option>
-          <option value="UK">United Kingdom</option>
-          <option value="other">Other</option>
-        </select>
-        <button class="btn" type="submit" id="submitBtn">Join waitlist</button>
-      </form>
-      <div class="err" id="err" role="alert"></div>
-      <p class="formnote" id="formNote">
-        <span>First month free for early signups</span>
-        <span>Launch in <b id="countdown">--</b></span>
-        <span id="joined" hidden></span>
-      </p>
+      <div class="stage">
+        <p class="bubble down" aria-live="polite"><span id="heroLine">I lock your phone. Your friends see who cracks first.</span></p>
+        <div class="figure">
+          <div class="halo" aria-hidden="true"></div>
+          <svg class="geet" viewBox="0 0 400 480" role="img" aria-label="Geet, a muscular Indian man flexing both arms"><use href="#geet" width="400" height="480"/></svg>
+          <svg class="pedestal" viewBox="0 0 200 44" aria-hidden="true"><use href="#pedestal"/></svg>
+        </div>
+      </div>
 
-      <div class="result" id="done" hidden>
-        <svg viewBox="0 0 400 480" role="img" aria-label="Geet"><use href="#geet"/></svg>
-        <div>
-          <p class="roast" id="doneRoast"></p>
-          <p class="small" id="doneStatus"></p>
-          <div class="actions">
+      <h1>Lock in with your friends.</h1>
+      <p class="lede">Geet is an iPhone app for squads of 2–4. It locks your distracting apps, runs surprise lock checks, and ranks you on effort, not muscles.</p>
+
+      <div class="join" id="join">
+        <form id="joinForm" novalidate>
+          <input id="email" type="email" autocomplete="email" placeholder="Your email" aria-label="Email" required>
+          <select id="age" aria-label="Age" required>
+            <option value="">Age</option>
+            <option value="under13">Under 13</option>
+            <option value="13-15">13–15</option>
+            <option value="16-17">16–17</option>
+            <option value="18-20">18–20</option>
+            <option value="21-24">21–24</option>
+            <option value="25+">25+</option>
+          </select>
+          <select id="country" aria-label="Country" required>
+            <option value="">Country</option>
+            <option value="US">United States</option>
+            <option value="IN">India</option>
+            <option value="CA">Canada</option>
+            <option value="UK">United Kingdom</option>
+            <option value="other">Other</option>
+          </select>
+          <button class="btn" type="submit" id="submitBtn">Join waitlist</button>
+        </form>
+        <p class="err" id="err" role="alert"></p>
+        <p class="note" id="formNote">
+          <span>First month free for early signups</span>
+          <span>Launches in <b id="countdown">6d</b></span>
+          <span id="joined" hidden></span>
+        </p>
+
+        <div class="result" id="done" hidden>
+          <span class="av"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span>
+          <div>
+            <p class="bubble" id="doneRoast"></p>
+            <p class="small" id="doneStatus"></p>
             <button class="btn" type="button" id="copyBtn">Copy invite for your squad</button>
+            <textarea id="shareText" rows="3" readonly hidden aria-label="Invite text"></textarea>
           </div>
-          <textarea id="shareText" rows="3" readonly hidden style="width:100%;margin-top:8px;font:13px var(--font-mono);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px"></textarea>
         </div>
-      </div>
 
-      <div class="result" id="young" hidden>
-        <svg viewBox="0 0 400 480" role="img" aria-label="Geet"><use href="#geet"/></svg>
-        <div>
-          <p class="roast">Come back when you're 13. Until then, do your homework.</p>
-          <p class="small">Nothing was saved.</p>
-          <div class="actions"><button class="btn quiet" type="button" id="backBtn">Back</button></div>
+        <div class="result" id="young" hidden>
+          <span class="av"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span>
+          <div>
+            <p class="bubble">Come back when you're 13. Until then, do your homework.</p>
+            <p class="small">Nothing was saved.</p>
+            <button class="btn ghost" type="button" id="backBtn">Go back</button>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="phone" aria-label="Preview of the Geet app" role="img">
-      <div class="notch"></div>
-      <div class="ph-top"><b>Squad</b><span>Season 1 · Day 18</span></div>
-      <div class="ph-card alert">
-        <div class="lbl">Lock check</div>
-        <div class="big">01:42</div>
-        <div class="t">Prove you're working. Your squad is waiting.</div>
-      </div>
-      <div class="ph-card">
-        <div class="lbl">This week</div>
-        <div class="rank"><span>Rohan</span><span>212</span></div>
-        <div class="rank me"><span>You</span><span>198</span></div>
-        <div class="rank"><span>Kabir</span><span>176</span></div>
-        <div class="rank"><span>Dev</span><span>131</span></div>
-      </div>
-      <div class="ph-card timer"><span>Study block · phone locked</span><b>47:12</b></div>
-    </div>
-  </div>
-
-  <section class="row geet-band" aria-labelledby="roastHead">
-    <div class="wrap roaster">
-      <svg class="geet-big" viewBox="0 0 400 480" role="img" aria-label="Geet, the app's mascot, flexing"><use href="#geet"/></svg>
-      <div class="chat">
-        <h2 id="roastHead">Tell Geet your excuse.</h2>
-        <p class="hint">Tap one. He'll roast it.</p>
-        <div class="chips" id="chips"></div>
-        <div class="msg you"><span class="who">You</span><span id="youLine"></span></div>
-        <div class="msg geet" aria-live="polite"><span class="who">Geet</span><span id="roastLine"></span></div>
-        <button class="btn quiet" type="button" id="againBtn">Roast me again</button>
       </div>
     </div>
   </section>
 
-  <section class="row" aria-labelledby="how">
+  <section class="block" id="how">
     <div class="wrap">
-      <h2 id="how">How it works</h2>
-      <ul class="steps">
-        <li><b>Lock your phone</b><span>Start a study or skill block. Apps stay locked until it's done.</span></li>
-        <li><b>Survive lock checks</b><span>Random 2-minute checks. Miss one and your squad sees it.</span></li>
-        <li><b>Win the season</b><span>Points come from effort, not abs. Anyone can take the title.</span></li>
-      </ul>
+      <div class="head">
+        <span class="kicker">How it works</span>
+        <h2>Three ways Geet keeps you honest.</h2>
+      </div>
+
+      <div class="row" style="--k: var(--accent)">
+        <div class="copy">
+          <span class="kicker">Lock Mode</span>
+          <h3>Lock the apps that eat your night.</h3>
+          <p>Start a study or skill block. Your distracting apps stay locked until it ends.</p>
+        </div>
+        <div class="shot">
+          <div class="phone" role="img" aria-label="Lock Mode screen: 47 minutes left in a chemistry revision block, six apps locked">
+            <div class="screen">
+              <div class="sb"><span>9:41</span><span class="isl"></span><span class="sbr"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="bat"></span></span></div>
+              <div class="app-top"><b>Lock Mode</b><span class="tag">3 friends watching</span></div>
+              <div class="ring">
+                <svg viewBox="0 0 160 160" aria-hidden="true">
+                  <circle cx="80" cy="80" r="70" fill="none" stroke="var(--raised)" stroke-width="12"/>
+                  <circle cx="80" cy="80" r="70" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="439.8" stroke-dashoffset="138"/>
+                </svg>
+                <div class="ring-in"><b>47:12</b><span class="mini">left</span></div>
+              </div>
+              <div class="task"><b>Chemistry revision</b><span class="mini">Ends 9:40 PM</span></div>
+              <div>
+                <span class="mini">6 apps locked</span>
+                <div class="tiles">
+                  <span class="tile" style="--t: var(--accent)"><svg><use href="#i-lock"/></svg></span>
+                  <span class="tile" style="--t: var(--saffron)"><svg><use href="#i-lock"/></svg></span>
+                  <span class="tile" style="--t: var(--ice)"><svg><use href="#i-lock"/></svg></span>
+                  <span class="tile" style="--t: var(--lvl2)"><svg><use href="#i-lock"/></svg></span>
+                  <span class="tile" style="--t: var(--lvl3)"><svg><use href="#i-lock"/></svg></span>
+                  <span class="tile" style="--t: var(--bad)"><svg><use href="#i-lock"/></svg></span>
+                </div>
+              </div>
+              <div class="stats">
+                <div><span class="mini">Locked today</span><b>2h 10m</b></div>
+                <div><span class="mini">Streak</span><b>6 days</b></div>
+              </div>
+              <div class="end">
+                <span class="pbtn">End early</span>
+                <span class="mini">Your squad will see if you quit.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row flip" style="--k: var(--saffron)">
+        <div class="copy">
+          <span class="kicker" style="--k: var(--saffron)">Lock Checks</span>
+          <h3>Surprise checks. Two minutes to prove it.</h3>
+          <p>Geet pings your squad at random. Show your desk before the timer runs out.</p>
+        </div>
+        <div class="shot">
+          <div class="phone" role="img" aria-label="Lock Check screen: 1 minute 42 seconds left to show your desk; two friends proved it, one missed">
+            <div class="screen">
+              <div class="sb"><span>9:41</span><span class="isl"></span><span class="sbr"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="bat"></span></span></div>
+              <div class="notif">
+                <span class="av"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span>
+                <div><b>GEET</b> <span class="mini">now</span><br>Lock check! Show me your desk.</div>
+              </div>
+              <div class="timer"><b>01:42</b><span class="mini">left to prove it</span></div>
+              <div class="vf">Point at your desk</div>
+              <span class="pbtn hot"><svg><use href="#i-cam"/></svg>Show your desk</span>
+              <div class="sq">
+                <div class="sq-row"><span class="ini" style="--c: var(--lvl3)">A</span>Arjun<span class="st ok">Proved it</span></div>
+                <div class="sq-row"><span class="ini" style="--c: var(--lvl4)">K</span>Kabir<span class="st ok">Proved it</span></div>
+                <div class="sq-row"><span class="ini" style="--c: var(--accent)">Y</span>You<span class="st wait">Waiting…</span></div>
+                <div class="sq-row"><span class="ini" style="--c: var(--lvl2)">D</span>Dev<span class="st miss">Missed</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="--k: var(--ice)">
+        <div class="copy">
+          <span class="kicker" style="--k: var(--ice)">Squad League</span>
+          <h3>Beat your friends on effort, not muscles.</h3>
+          <p>Points come from locked minutes and passed checks. Anyone in the squad can win the 75-day season.</p>
+        </div>
+        <div class="shot">
+          <div class="phone" role="img" aria-label="Squad League screen: day 18 of 75; Rohan leads with 212 points, you are second with 198">
+            <div class="screen">
+              <div class="sb"><span>9:41</span><span class="isl"></span><span class="sbr"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="bat"></span></span></div>
+              <div class="app-top"><b>Squad League</b><span class="tag">Season 1</span></div>
+              <div class="season"><span class="mini">Day 18 of 75</span><div class="bar"><i></i></div></div>
+              <ol class="board">
+                <li><span class="rk">1</span><span class="ini" style="--c: var(--lvl5)">R</span><span class="who" style="--c: var(--lvl5)"><b>Rohan</b><em>Sharmaji Ka Beta</em></span><span class="pts">212</span></li>
+                <li class="me"><span class="rk">2</span><span class="ini" style="--c: var(--accent)">Y</span><span class="who" style="--c: var(--lvl4)"><b>You</b><em>Topper Material</em></span><span class="pts">198</span></li>
+                <li><span class="rk">3</span><span class="ini" style="--c: var(--lvl4)">K</span><span class="who" style="--c: var(--lvl3)"><b>Kabir</b><em>Jugaad Master</em></span><span class="pts">176</span></li>
+                <li><span class="rk">4</span><span class="ini" style="--c: var(--lvl2)">D</span><span class="who" style="--c: var(--lvl2)"><b>Dev</b><em>Kal Se Pakka</em></span><span class="pts">131</span></li>
+              </ol>
+              <div class="stats">
+                <div><span class="mini">Today</span><b class="ok">+24</b></div>
+                <div><span class="mini">Checks passed</span><b>3 of 3</b></div>
+              </div>
+              <div class="gsays">
+                <span class="av"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span>
+                <p>Rohan's 14 points ahead. Two blocks tonight and you pass him.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
+  <section class="block levels-sec" id="levels">
+    <div class="wrap">
+      <div class="head">
+        <span class="kicker" style="--k: var(--saffron)">Lock Score</span>
+        <h2>Six levels of desi. Which one are you?</h2>
+        <p>Your daily Lock Score sets your level. Drag to find yours.</p>
+      </div>
+
+      <div class="meter">
+        <div class="score">
+          <svg viewBox="0 0 160 160" aria-hidden="true">
+            <circle cx="80" cy="80" r="70" fill="none" stroke="var(--raised)" stroke-width="12"/>
+            <circle class="arc" id="arc" cx="80" cy="80" r="70" fill="none" stroke-width="12" stroke-linecap="round" stroke-dasharray="439.8" stroke-dashoffset="290"/>
+          </svg>
+          <div class="score-in"><b id="scoreNum">34</b><span>Lock Score</span></div>
+        </div>
+        <div class="readout" aria-live="polite">
+          <span class="kicker" id="lvlNum">Level 2 · 20–39</span>
+          <h3 id="lvlName">Kal Se Pakka</h3>
+          <span class="hi" id="lvlHi" lang="hi">कल से पक्का</span>
+          <div class="says">
+            <span class="av"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span>
+            <p class="bubble" id="lvlLine">Kal se? You said that kal too.</p>
+          </div>
+        </div>
+        <div class="slide">
+          <label for="score">Your Lock Score</label>
+          <input id="score" type="range" min="0" max="100" value="34">
+          <div class="ticks" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div>
+        </div>
+      </div>
+
+      <ol class="levels" id="levelList">
+        <li><button type="button" class="lvl" style="--c: var(--lvl1)" data-i="0">
+          <span class="mw"><span class="medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9h12l-1.6 11.2a1 1 0 0 1-1 .8H8.6a1 1 0 0 1-1-.8z"/><path d="M6.6 13h10.8"/><path d="M10 6c0-1 1-1.2 1-2.2M14 6c0-1 1-1.2 1-2.2"/></svg></span><span class="stand"></span></span>
+          <span class="lvl-n">Level 1 · 0–19</span>
+          <span class="lvl-name">Chai Break Chacha</span>
+          <span class="hi" lang="hi">चाय ब्रेक चाचा</span>
+          <span class="lvl-d">Always on a break.</span>
+        </button></li>
+        <li><button type="button" class="lvl" style="--c: var(--lvl2)" data-i="1">
+          <span class="mw"><span class="medal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/><text x="12" y="17.6" text-anchor="middle" font-size="6.2" font-weight="800" font-family="Arial, sans-serif" fill="currentColor" stroke="none">KAL</text></svg></span><span class="stand"></span></span>
+          <span class="lvl-n">Level 2 · 20–39</span>
+          <span class="lvl-name">Kal Se Pakka</span>
+          <span class="hi" lang="hi">कल से पक्का</span>
+          <span class="lvl-d">“Starting tomorrow.” Every day.</span>
+        </button></li>
+        <li><button type="button" class="lvl" style="--c: var(--lvl3)" data-i="2">
+          <span class="mw"><span class="medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg></span><span class="stand"></span></span>
+          <span class="lvl-n">Level 3 · 40–59</span>
+          <span class="lvl-name">Jugaad Master</span>
+          <span class="hi" lang="hi">जुगाड़ मास्टर</span>
+          <span class="lvl-d">Finishes everything at 2&nbsp;a.m.</span>
+        </button></li>
+        <li><button type="button" class="lvl" style="--c: var(--lvl4)" data-i="3">
+          <span class="mw"><span class="medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></span><span class="stand"></span></span>
+          <span class="lvl-n">Level 4 · 60–79</span>
+          <span class="lvl-name">Topper Material</span>
+          <span class="hi" lang="hi">टॉपर मटीरियल</span>
+          <span class="lvl-d">Teachers are starting to notice.</span>
+        </button></li>
+        <li><button type="button" class="lvl" style="--c: var(--lvl5)" data-i="4">
+          <span class="mw"><span class="medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 4.2M17 6h2.5a2.5 2.5 0 0 1-2.6 4.2"/><path d="M12 14v3.5M8 21h8M9.5 17.5h5V21h-5z"/></svg></span><span class="stand"></span></span>
+          <span class="lvl-n">Level 5 · 80–94</span>
+          <span class="lvl-name">Sharmaji Ka Beta</span>
+          <span class="hi" lang="hi">शर्माजी का बेटा</span>
+          <span class="lvl-d">Every aunty compares her kid to you.</span>
+        </button></li>
+        <li><button type="button" class="lvl" style="--c: var(--lvl6)" data-i="5">
+          <span class="mw"><span class="medal face"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span><span class="stand"></span></span>
+          <span class="lvl-n">Level 6 · 95–100</span>
+          <span class="lvl-name">Geet</span>
+          <span class="hi" lang="hi">गीत</span>
+          <span class="lvl-d">Smart. Jacked. Locked in.</span>
+        </button></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block closer">
+    <div class="wrap closer-in">
+      <div class="figure">
+        <div class="halo" aria-hidden="true"></div>
+        <svg class="geet" viewBox="0 0 400 480" role="img" aria-label="Geet flexing"><use href="#geet" width="400" height="480"/></svg>
+        <svg class="pedestal" viewBox="0 0 200 44" aria-hidden="true"><use href="#pedestal"/></svg>
+      </div>
+      <div class="copy">
+        <h2>Still got an excuse?</h2>
+        <p class="muted">Pick one. Geet has an answer.</p>
+        <div class="chips" id="chips"></div>
+        <div class="chat" aria-live="polite">
+          <p class="you" id="youLine"></p>
+          <div class="geet-says">
+            <span class="av"><svg viewBox="136 22 132 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true"><use href="#geet" width="400" height="480"/></svg></span>
+            <p class="bubble" id="roastLine"></p>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn" href="#join">Join the waitlist</a>
+          <button class="btn ghost" type="button" id="againBtn">Roast me again</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
-<footer>
-  <div class="wrap">
+<footer class="wrap foot">
+  <p class="founder">Built in public by a desi founder going from zero workouts to jacked in 75 days. Follow along on <a href="https://instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a> and <a href="https://youtube.com/@yourhandle" target="_blank" rel="noopener">YouTube</a>.</p>
+  <div class="foot-row">
     <span>© 2026 Geet · For ages 13+</span>
-    <div class="links">
-      <a href="privacy.html">Privacy</a>
-      <a href="https://www.instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.youtube.com/@yourhandle" target="_blank" rel="noopener">YouTube</a>
-    </div>
+    <a href="privacy.html">Privacy Policy</a>
   </div>
 </footer>
 
@@ -380,19 +719,73 @@ footer a:hover { color: var(--fg); }
   var LAUNCH = Date.parse("2026-11-05T00:00:00-08:00");
 
   var $ = function (id) { return document.getElementById(id); };
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // countdown
   function tick() {
     var s = Math.max(0, Math.floor((LAUNCH - Date.now()) / 1000));
     var d = Math.floor(s / 86400), h = Math.floor(s / 3600) % 24, m = Math.floor(s / 60) % 60;
-    $("countdown").textContent = s === 0 ? "now" : d + "d " + h + "h " + m + "m";
+    $("countdown").textContent = s === 0 ? "now" : (d > 0 ? d + "d " + h + "h" : h + "h " + m + "m");
   }
   tick(); setInterval(tick, 30000);
 
+  // Geet talking at the top
+  var heroLines = [
+    "I lock your phone. Your friends see who cracks first.",
+    "Surprise lock check. Show me your desk. Two minutes.",
+    "Effort wins here. Not muscles. Not even mine."
+  ];
+  if (!calm) {
+    var hl = 0, heroEl = $("heroLine");
+    setInterval(function () {
+      heroEl.style.opacity = 0;
+      setTimeout(function () { hl = (hl + 1) % heroLines.length; heroEl.textContent = heroLines[hl]; heroEl.style.opacity = 1; }, 260);
+    }, 4200);
+  }
+
+  // levels
+  var LEVELS = [
+    { min: 0,  max: 19,  name: "Chai Break Chacha", hi: "चाय ब्रेक चाचा", c: "--lvl1", line: "Bhai, your chai break started at lunch." },
+    { min: 20, max: 39,  name: "Kal Se Pakka",      hi: "कल से पक्का",     c: "--lvl2", line: "Kal se? You said that kal too." },
+    { min: 40, max: 59,  name: "Jugaad Master",     hi: "जुगाड़ मास्टर",    c: "--lvl3", line: "Jugaad at 2 a.m. again? Start at 8 and sleep like a human." },
+    { min: 60, max: 79,  name: "Topper Material",   hi: "टॉपर मटीरियल",    c: "--lvl4", line: "Okay, okay. Teachers are noticing. Don't stop now." },
+    { min: 80, max: 94,  name: "Sharmaji Ka Beta",  hi: "शर्माजी का बेटा",  c: "--lvl5", line: "Every aunty's group chat is talking about you." },
+    { min: 95, max: 100, name: "Geet",              hi: "गीत",             c: "--lvl6", line: "Smart and jacked. You're me now." }
+  ];
+  var PICK = [12, 30, 50, 70, 87, 97];
+  var slider = $("score"), cards = document.querySelectorAll(".lvl"), root = document.documentElement, CIRC = 439.8;
+  function setScore(v) {
+    v = Math.max(0, Math.min(100, +v));
+    var i = 0;
+    for (var k = 0; k < LEVELS.length; k++) if (v >= LEVELS[k].min) i = k;
+    var L = LEVELS[i];
+    root.style.setProperty("--lvl", "var(" + L.c + ")");
+    $("arc").style.strokeDashoffset = (CIRC * (1 - v / 100)).toFixed(1);
+    $("scoreNum").textContent = v;
+    $("lvlNum").textContent = "Level " + (i + 1) + " · " + L.min + "–" + L.max;
+    $("lvlName").textContent = L.name;
+    $("lvlHi").textContent = L.hi;
+    $("lvlLine").textContent = L.line;
+    slider.value = v;
+    slider.setAttribute("aria-valuetext", v + ", " + L.name);
+    Array.prototype.forEach.call(cards, function (c, j) {
+      c.classList.toggle("on", j === i);
+      c.classList.toggle("off", j > i);
+      c.setAttribute("aria-pressed", j === i ? "true" : "false");
+    });
+  }
+  slider.addEventListener("input", function () { setScore(slider.value); });
+  Array.prototype.forEach.call(cards, function (c) {
+    c.addEventListener("click", function () { setScore(PICK[+c.getAttribute("data-i")]); });
+  });
+  setScore(slider.value);
+
+  // excuse roasts
   var roasts = {
     "I'll start Monday": [
       "You've said that every Monday this year. Start today.",
       "Monday isn't coming to save you. Start today.",
-      "Your \u201cMonday\u201d has lasted six months, bro."
+      "Your “Monday” has lasted six months, bro."
     ],
     "I'm too tired": [
       "Tired from what? Scrolling isn't a workout.",
@@ -415,10 +808,9 @@ footer a:hover { color: var(--fg); }
       "You don't need more time. You need to lock in."
     ]
   };
-  var keys = Object.keys(roasts), current = keys[0], idx = 0;
-  var chips = $("chips");
+  var keys = Object.keys(roasts), current = keys[0], idx = 0, chips = $("chips");
   function showRoast() {
-    $("youLine").textContent = "\u201c" + current + "\u201d";
+    $("youLine").textContent = "“" + current + "”";
     $("roastLine").textContent = roasts[current][idx];
   }
   keys.forEach(function (k, i) {
@@ -432,11 +824,10 @@ footer a:hover { color: var(--fg); }
     });
     chips.appendChild(b);
   });
-  $("againBtn").addEventListener("click", function () {
-    idx = (idx + 1) % roasts[current].length; showRoast();
-  });
+  $("againBtn").addEventListener("click", function () { idx = (idx + 1) % roasts[current].length; showRoast(); });
   showRoast();
 
+  // signup
   var doneRoasts = [
     "Signing up is the easy part. I'll be watching on day 3.",
     "You're in. Your excuses are officially on notice.",

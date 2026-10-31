@@ -6,7 +6,7 @@ Early access opens **November 5, 2026**. Ages 13+.
 
 ## Files
 
-- `index.html` — the waitlist page
+- `index.html` — the waitlist page (Geet up top, three app screens, six Lock Score levels, excuse roaster)
 - `privacy.html` — privacy policy
 - `src/index.body.html` + `build.py` — source for `index.html` (run `python3 build.py` after editing)
 
